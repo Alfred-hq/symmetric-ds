@@ -1,4 +1,8 @@
-apply from: symAssembleDir + '/common.gradle'
+    plugins {
+    	id 'edu.sc.seis.launch4j' version '2.5.3'
+    }
+
+	apply from: symAssembleDir + '/common.gradle'
 
     description = 'General purpose cross platform service wrapper'
 
@@ -14,4 +18,16 @@ apply from: symAssembleDir + '/common.gradle'
                     "Main-Class": "org.jumpmind.symmetric.wrapper.Wrapper",
                     "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '))
         }
+        finalizedBy createExe
+    }
+    
+    createExe {
+    	mustRunAfter 'jar'
+    	outputDir = 'libs'
+    	bundledJrePath = '%JAVA_HOME%;%PATH%'
+    	bundledJreAsFallback = true
+    	jarTask = jar
+    	dontWrapJar = true
+    	headerType = 'console'
+    	downloadUrl = 'https://adoptium.net/temurin/releases?version=8'
     }

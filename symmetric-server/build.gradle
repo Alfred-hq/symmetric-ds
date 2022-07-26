@@ -113,6 +113,12 @@ apply from: symAssembleDir + '/asciidoc.gradle'
                                 (a.name.contains('slf4j-api') || a.name.contains('to-slf4j') || a.name.contains('over-slf4j'))
                     }
                 }
+                into('bin') { 
+                	from '$symAssembleDir/../symmetric-wrapper/build/libs/symmetric-wrapper.exe'
+                }
+                into ('bin/lib') {
+                	from '$symAssembleDir/../symmetric-wrapper/build/libs/lib'
+                }
             }
         }
     }

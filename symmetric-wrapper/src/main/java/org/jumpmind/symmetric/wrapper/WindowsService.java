@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -542,6 +543,18 @@ public class WindowsService extends WrapperService {
         int rc = Native.getLastError();
         throw new WrapperException(Constants.RC_NATIVE_ERROR, rc, name + " returned error " + rc + ": "
                 + Kernel32Util.formatMessageFromLastErrorCode(rc));
+    }
+    
+    @Override
+    protected ArrayList<String> getWrapperCommand(String arg, boolean isQuotedArguments) {
+        ArrayList<String> cmd = new ArrayList<String>();
+        String quote = isQuotedArguments ? getWrapperCommandQuote() : "";
+        String wrapperExePath = config.getWrapperJarPath();
+        wrapperExePath = wrapperExePath.replace("lib\\symmetric-wrapper.jar", "bin\\symmetric-wrapper.exe");
+        cmd.add(quote + wrapperExePath + quote);
+        cmd.add(arg);
+        cmd.add(quote + config.getConfigFile() + quote);
+        return cmd;
     }
 
     protected String getWrapperCommandQuote() {
